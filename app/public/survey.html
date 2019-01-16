@@ -52,7 +52,7 @@
         </select>
         <br>
     
-    
+     
         <h3><strong>Question 3</strong></h3>
         <p>You find it easy to stay relaxed and focused even when there is some pressure.</p>
         <select class="chosen-select" id="q3">
@@ -168,27 +168,6 @@
     
       </div>
     
-      <!-- Modal -->
-      <div id="results-modal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-    
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button class="close" data-dismiss="modal">&times;</button>
-              <h2 class="modal-title"><strong>Best Match</strong></h2>
-            </div>
-            <div class="modal-body">
-              <h2 id="match-name"></h2>
-              <img id="match-img" src="https://media.licdn.com/mpr/mpr/shrinknp_400_400/p/6/005/064/1bd/3435aa3.jpg" alt="">
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-          </div>
-    
-        </div>
-      </div>
 
 </body>
 
@@ -196,13 +175,33 @@
 
 
 <script type="text/javascript">
+
  
   $("#submit").on("click", function(event) {
     event.preventDefault();
 
-    var scores = [];
+    function validateForm() {
+        var isValid = true;
+        $(".form-control").each(function() {
+          if ($(this).val() === "") {
+            isValid = false;
+          }
+        });
 
-    scores.push(($("#q1").val().trim()))
+        $(".chosen-select").each(function() {
+
+          if ($(this).val() === "") {
+            isValid = false;
+          }
+        });
+        return isValid;
+      }
+
+if(validateForm()){
+
+    var scores = [];
+  
+    scores.push(($("#q1").val().trim()));
     scores.push(($("#q2").val().trim()))
     scores.push(($("#q3").val().trim()))
     scores.push(($("#q4").val().trim()))
@@ -212,24 +211,25 @@
     scores.push(($("#q8").val().trim()))
     scores.push(($("#q9").val().trim()))
     scores.push(($("#q10").val().trim()))
-    
+
+    console.log(scores)
 
     var newPerson = {
       name: $("#name").val().trim(),
       scores: scores
-     
     };
 
     console.log(newPerson);
-
-  
 
     $.post("/api/friends", newPerson,
       function(data) {
 
 
-       
-        $("#name").val("");
+        alert("\n" + newPerson.name + " You matched with " + data.name + "!\n\n" + "We think you two will get along great!");
+
+      });
+ 
+      $("#name").val("");
         $("#q1").val("");
         $("#q2").val("");
         $("#q3").val("");
@@ -237,9 +237,18 @@
         $("#q5").val("");
         $("#q6").val("");
         $("#q7").val("");
+        $("#q8").val("");
+        $("#q9").val("");
+        $("#q10").val("");
 
-      });
+    } else {
+        alert("Please fill out all fields before submitting!");
+      }
 
   });
+
+  
+
+   
 
 </script>
